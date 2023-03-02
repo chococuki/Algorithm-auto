@@ -14,22 +14,21 @@ public class Main {
 	static int V, E, INF=Integer.MAX_VALUE;
 	static int[] arr;
 	static Map<Integer, List<Node>> line = new LinkedHashMap<>();
-	static PriorityQueue<Node> pq = new PriorityQueue<>(new Comparator<Node>() {
-
-		@Override
-		public int compare(Node o1, Node o2) {
-			return Integer.compare(o1.val, o2.val);
-		}
-	});
+	static PriorityQueue<Node> pq = new PriorityQueue<>();
 	
 	//도착지와 가중치
-	static class Node {
+	static class Node implements Comparable<Node>{
 		int to, val;
 
 		public Node(int to, int val) {
 			super();
 			this.to = to;
 			this.val = val;
+		}
+
+		@Override
+		public int compareTo(Node o) {
+			return Integer.compare(this.val, o.val);
 		}
 		
 	}
@@ -46,6 +45,7 @@ public class Main {
 	
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringBuilder sb = new StringBuilder();
 		StringTokenizer st = new StringTokenizer(br.readLine());
 		
 		V = Integer.parseInt(st.nextToken());
@@ -77,8 +77,10 @@ public class Main {
 		}
 		
 		for (int i = 1; i <= V; i++) {
-			System.out.println(arr[i]==INF ? "INF" : arr[i]);
+			sb.append(arr[i]==INF ? "INF" : arr[i]);
+			sb.append("\n");
 		}
 		
+		System.out.println(sb.toString());
 	}
 }
