@@ -14,6 +14,7 @@ public class Main {
 	static int N, M, min=Integer.MAX_VALUE;
 	static int[] arr;
 	static Map<Integer, List<Node>> bus = new LinkedHashMap<>();
+	//비용을 비교하는 priorityqueue
 	static PriorityQueue<Node> pq = new PriorityQueue<>(new Comparator<Node>() {
 
 		@Override
@@ -22,6 +23,7 @@ public class Main {
 		}
 	});
 	
+	//도착지와 비용
 	static class Node {
 		int to, price;
 
@@ -33,6 +35,7 @@ public class Main {
 		
 	}
 	
+	//초기화 함수
 	private static void make() {
 		arr = new int[N+1];
 		Arrays.fill(arr, Integer.MAX_VALUE);
@@ -73,7 +76,12 @@ public class Main {
 		while(!pq.isEmpty()) {
 			Node now=pq.poll();
 			
-			if(now.to==end) min=Math.min(min, now.price);
+			//도착하면 종료
+			if(now.to==end) {
+				min=now.price;
+				break;
+			}
+			//경유지 가는 비용이 적은 값을 저장
 			if(arr[now.to] > now.price) {
 				arr[now.to] = now.price;
 				
