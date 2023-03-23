@@ -1,37 +1,40 @@
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-public class Main {
+public class Main{
+
 	public static void main(String[] args) throws NumberFormatException, IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		int N = Integer.parseInt(br.readLine());
+		int minimum = Integer.MAX_VALUE;
 		
-		int T = Integer.parseInt(br.readLine());
+		int[][]house = new int [N][N];
+		int [][] DP = new int [N+1][3];
 		
-		int[][] cost = new int[T+1][3];
-		for(int i=1; i<=T; i++) {
-			String[] tmp = br.readLine().split(" ");
-			cost[i][0] = Integer.parseInt(tmp[0]);
-			cost[i][1] = Integer.parseInt(tmp[1]);
-			cost[i][2] = Integer.parseInt(tmp[2]);
+		for(int i = 0; i < N; i++) {
+			String [] input = br.readLine().split(" ");
+			for(int j = 0; j < 3; j++) {
+				house[i][j] = Integer.parseInt(input[j]);
+			}
 		}
 		
-		int[][] road = new int[T+1][3];
+
 		
-		road[1][0] = cost[1][0];
-		road[1][1] = cost[1][1];
-		road[1][2] = cost[1][2];
-		
-		for(int i=2; i<=T; i++) {
-			road[i][0] = Math.min(road[i-1][1], road[i-1][2])+cost[i][0];
-			road[i][1] = Math.min(road[i-1][0], road[i-1][2])+cost[i][1];
-			road[i][2] = Math.min(road[i-1][0], road[i-1][1])+cost[i][2];
+		for(int i = 1; i < N+1; i++) {
+			DP[i][0] = Math.min(DP[i-1][1]+house[i-1][0],DP[i-1][2]+ house[i-1][0]);
+			DP[i][1] = Math.min(DP[i-1][0]+house[i-1][1],DP[i-1][2]+ house[i-1][1]);
+			DP[i][2] = Math.min(DP[i-1][0]+house[i-1][2],DP[i-1][1]+ house[i-1][2]);
+	
+		}
+
+		for (int i = 0; i < 3; i++) {
+			minimum = Math.min(DP[N][i],minimum);
 		}
 		
-		int result = road[T][0];
-		for(int i=0; i<3; i++) {
-			result = Math.min(road[T][i], result);
-		}
-		System.out.println(result);
+		System.out.println(minimum);
+		
 	}
+
 }
