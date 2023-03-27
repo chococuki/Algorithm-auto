@@ -1,52 +1,58 @@
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
 
 public class Main {
+
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		
-		String[] str = br.readLine().split(" ");
-		int N = Integer.parseInt(str[0]);
-		int S = Integer.parseInt(str[1]);
-		
-		String[] tmp = br.readLine().split(" ");
-		int[] arr = new int[N];
-		for(int i=0; i<N; i++) {
-			arr[i] = Integer.parseInt(tmp[i]);
+		StringTokenizer st = new StringTokenizer(br.readLine());
+
+		int N = Integer.parseInt(st.nextToken());
+		int S = Integer.parseInt(st.nextToken());
+
+		int[] numbers = new int[N];
+		int[] partNum = new int[N+1];
+
+		st = new StringTokenizer(br.readLine());
+		for (int i = 0; i < N; i++) {
+			numbers[i] = Integer.parseInt(st.nextToken());
 		}
-		
-		int sum = arr[0];
-		int max = 0;
-		int min = 0;
-		int count = N;
-		boolean isOver = false;
-		while(true) {
-			if(min==0 && max==0 && sum>=S) {
-				isOver = true;
-				count = 1;
-				break;
+
+		partNum[0] = numbers[0];
+
+		for (int i = 0; i < N; i++) {
+			partNum[i+1] = numbers[i] + partNum[i];
+		}
+
+		int start = 0;
+		int end = 0;
+		int result = Integer.MAX_VALUE;
+
+		while (end < N+1) {
+//			System.out.println(start+" "+end);
+			int temp = partNum[end] - partNum[start];
+
+			// 만약에 S보다 작을 경우엔 end를 1칸 밀어야 하고
+			if (temp < S) {
+				end = end + 1;
 			}
-			
-			if(sum<S) {
-				if (max<N-1) {
-					sum += arr[++max];
-				} else {
+
+			// S보다 클 경우엔 start를 1칸 밀면 된다 그리고 최소 길이 업데이트
+			else {
+				result = Math.min(result, (end - start));
+				if(result == 0) {
+					result = 1;
 					break;
 				}
-			} else if(sum>=S) {
-				if (max == N-1 && min == N-1) {
-					break;
-				} else {
-					sum -= arr[min++];
-				}
+				start = start + 1;
 			}
-			if(sum >= S) {
-				count = Math.min(count, max-min+1);
-				isOver = true;
-			}			
+
 		}
-		if(!isOver) {
-			count = 0;
-		} 
-		System.out.println(count);
+		
+		if(result!=Integer.MAX_VALUE)System.out.println(result);
+		else System.out.println(0);
 	}
+
 }
