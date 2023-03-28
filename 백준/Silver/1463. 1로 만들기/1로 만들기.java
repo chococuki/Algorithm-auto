@@ -1,17 +1,16 @@
-import java.io.*;
+import java.io.IOException;
+import java.util.Scanner;
 
 public class Main {
-	static int board[];
-	
-	public static void main(String[] args) throws NumberFormatException, IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	public static void main(String[] args) throws IOException {
+		Scanner sc = new Scanner(System.in);
 		
-		int number = Integer.parseInt(br.readLine());
+		int n = sc.nextInt();
 		
-		board = new int[number+1];
+		int[] board = new int[n+1];
 
 		board[1] = 0;
-		for (int i = 2; i < number+1; i++)
+		for (int i = 2; i < n+1; i++)
 		{
 			board[i] = board[i-1]+1;
 			if (i % 2 == 0 && board[i] > board[i/2]+1)
@@ -23,8 +22,6 @@ public class Main {
 				board[i] = board[i/3]+1;
 			}
 		}
-		System.out.println(board[number]);
-		
-		
+		System.out.println(board[n]);
 	}
 }
