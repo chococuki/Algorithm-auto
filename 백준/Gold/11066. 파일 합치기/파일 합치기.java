@@ -1,55 +1,55 @@
 import java.io.BufferedReader;
-import java.io.IOException;
+import java.io.BufferedWriter;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.StringTokenizer;
 
 public class Main {
+    static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    static BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+    static StringTokenizer st = null;
 
-	static int TC, K;
-	static int[] file; // 각 건물을 짓는데 걸리는 시간
-	static int[] SumFile;
-	static int[][] dp;
-	static StringBuilder sb = new StringBuilder();
+    public static void main(String[] args) throws Exception {
+        int t;
 
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st = new StringTokenizer(br.readLine());
-		TC = Integer.parseInt(st.nextToken());
+        t = Integer.parseInt(br.readLine());
+        for (int tc = 0; tc < t; tc++) {
+            int k;
+            int[] novel;
+            int[] sum;
+            int[][] dp;
 
-		for (int t = 0; t < TC; t++) {
-			st = new StringTokenizer(br.readLine());
-			K = Integer.parseInt(st.nextToken());
-			
-			file = new int[K+1];
-			SumFile = new int[K+1];
-			dp = new int[K+1][K+1];
+            k = Integer.parseInt(br.readLine());
+            novel = new int[k + 1];
+            dp = new int[k + 1][k + 1];
+            sum = new int[k + 1];
 
-			st = new StringTokenizer(br.readLine());
+            st = new StringTokenizer(br.readLine());
+            for (int i = 1; i <= k; i++) {
+                novel[i] = Integer.parseInt(st.nextToken());
+                sum[i] = sum[i - 1] + novel[i];
+            }
 
-			// file 병합에 걸리는 시간, 누적합 초기화
-			for (int i = 1; i < K + 1; i++) {
-				file[i] = Integer.parseInt(st.nextToken());
-				SumFile[i] = SumFile[i-1]+file[i];
-			}
-			
-			
-			//몇 장씩 묶어서 merge 할 건지
-			for(int n = 1; n <= K; n++) {		
-				//시작 지점을 한칸 씩 옮겨가면서 
-				for(int start = 1; start+n<=K; start++) {
-					int end = start+n; //끝지점 정하기
-					dp[start][end] = Integer.MAX_VALUE;				
-					
-					//파일을 합칠 구간에서도 left와 right로 나누어서 병합해줘야한다 
-					for(int divide = start; divide < end; divide++) {
-						dp[start][end] = Math.min(dp[start][end], 
-										 dp[start][divide] + dp[divide+1][end] + SumFile[end]-SumFile[start-1]);
-					}
-				}
-			}
-		
-			System.out.println(dp[1][K]);
-			
-		}
-	}
+            for (int n = 1; n <= k; n++) {
+                for (int from = 1; from + n <= k; from++) {
+                    int to = from + n;
+                    dp[from][to] = Integer.MAX_VALUE;
+                    for (int divide = from; divide < to; divide++) {
+                        dp[from][to] = Math.min(dp[from][to], dp[from][divide] + dp[divide + 1][to] + sum[to] - sum[from - 1]);
+                    }
+                }
+            }
+
+            System.out.println(dp[1][k]);
+        }
+
+    }
+    /**
+     * memoization dp
+     * 점화식
+     * dp[i][j] = i부터 j장까지 합치는 비용
+     * dp[i][i] = novel[i]
+     * dp[i][i + 1] = novel[i] + novel[i+1]
+     */
+
 }
