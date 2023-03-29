@@ -1,66 +1,56 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.StringTokenizer;
 
 public class Main {
-	static int N;
-	static int min = 10000000;
-	static int[][] arr;
-	static int[] visit;
+	static int N, prices[][];
+	static int result = Integer.MAX_VALUE;
+	static boolean visited[];
 	
-	private static void move(int from, int count, int sum, int[] visit) {
-		if(count==N) {
-			if(arr[from][visit[0]]==0)
-				return;
-			sum += arr[from][visit[0]];
-			min = Math.min(min, sum);
-			
-/*			for(int i=0; i<N; i++) {
-				System.out.print(visit[i]+" ");
+	private static void move(int start, int from, int cnt, int price) {
+		//출발지 정하기
+		if(start==-1) {
+			for (int i = 0; i < N; i++) {
+				move(i, i, cnt, price);
 			}
-			System.out.println("----"+min);*/
 			return;
 		}
 		
-		for(int to=0; to<N; to++) {
-			boolean is = true;
-			for(int i=0; i<=count; i++) {
-				if(to==visit[i])
-					is =false;
-			}
-			
-			if(is) {
-				visit[count]=to;
-				if(arr[from][to]==0) {
-					return;
-				}
-				move(to, count+1, sum+arr[from][to], visit);
+		if(cnt==N) {
+			//종착지가 시작지점일때
+			if(start==from) result = Math.min(price, result);
+			return;
+		}
+		
+		//다음 방문지 
+		for (int to = 0; to < N; to++) {
+			if (!visited[to] && prices[from][to]!=0) {
+				visited[to] = true;
+				move(start, to, cnt+1, price+prices[from][to]);
+				visited[to] = false;
 			}
 		}
 	}
 	
-	public static void main(String[] args) throws NumberFormatException, IOException {
+	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
 		
-		N = Integer.parseInt(br.readLine());
+		N = Integer.parseInt(st.nextToken());
 		
-		arr = new int[N][N];
+		prices = new int[N][N];
+		visited = new boolean[N];
 		
-		String[] str;
-		for(int to=0; to<N; to++) {
-			str = br.readLine().split(" ");
-			for(int from=0; from<N; from++) {
-				arr[to][from] = Integer.parseInt(str[from]);
+		for (int i = 0; i < N; i++) {
+			st = new StringTokenizer(br.readLine());
+			for (int j = 0; j < N; j++) {
+				prices[i][j] = Integer.parseInt(st.nextToken());
 			}
 		}
 		
-		visit = new int[N+1];
-		for(int i=0; i<N; i++) {
-//			System.out.println("start: "+i);
-			visit[0]=i;
-			move(i, 1, 0, visit);
-		}
+		move(-1, -1, 0, 0);
 		
-		System.out.println(min);
+		System.out.println(result);
 	}
 }
