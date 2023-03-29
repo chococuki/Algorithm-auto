@@ -46,8 +46,6 @@ public class Main {
 		while (!pq.isEmpty()) {
 			Node now = pq.poll();
 			
-			if(now.x==H && now.y==W) return now.cnt;
-			
 			//K 남아있을 경우
 			if (now.k > 0) {
 				for (int i = 0; i < dxh.length; i++) {
@@ -118,7 +116,11 @@ public class Main {
 		//시작 지점
 		visited[1][1][K] = true;
 		pq.add(new Node(1, 1, K, 0));
-
-		System.out.println(move());
+		
+		if(H==1 && W==1) {
+			System.out.println(0);
+		} else {
+			System.out.println(move());
+		}
 	}
 }
