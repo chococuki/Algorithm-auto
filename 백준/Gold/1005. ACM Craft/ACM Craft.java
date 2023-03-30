@@ -14,7 +14,6 @@ public class Main {
 	static ArrayList<ArrayList<Integer>> Adjacent;
 	static StringBuilder sb = new StringBuilder();
 	static Deque<Integer> dq;
-	static int INF = 100000000;
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -57,32 +56,31 @@ public class Main {
 
 			st = new StringTokenizer(br.readLine());
 			W = Integer.parseInt(st.nextToken());
-
 			
 			
 			for (int i = 1; i < N + 1; i++) {
 				// 들어오는 간선이 없을 때
 				if (inNode[i] == 0) {
+					//위상정렬 queue에 넣어주고 
 					dq.add(i);
+					//초기 dp값은 자기 자신번호 건물을 짓는 시간
 					dp[i] = building[i]; 
 				}
 			}
-			
-			
+				
 			while (!dq.isEmpty()) {				
 				int now = dq.poll();
 				for (int i = 0; i < Adjacent.get(now).size(); i++) {
 					int nextNode = Adjacent.get(now).get(i);
-//					System.out.println(now+" "+nextNode);
+					//현재 건물을 짓기 위해서 자신과 이전에 가장 늦게지어지는 건물 + 자기 건설시간을 비교해서 최댓값
 					dp[nextNode] = Math.max(dp[nextNode], dp[now]+building[nextNode]);
 					inNode[nextNode]--;
 					if(inNode[nextNode]==0)dq.add(nextNode);
 				}
 			}
 			
-			System.out.println(dp[W]);
-
+			sb.append(dp[W]).append('\n');
 		}
+		System.out.println(sb);
 	}
-
 }
