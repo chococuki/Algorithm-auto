@@ -1,112 +1,126 @@
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Set;
 import java.util.StringTokenizer;
 
 public class Main {
+	static int row, col;
+	static int[][] pan;
+	static int[] dr = { 1, -1, 0, 0 };
+	static int[] dc = { 0, 0, 1, -1 };
+	static Set<Position> air = new LinkedHashSet<>();
 
-	private static int N;
-	private static int M;
-	private static int[][] map;
-	private static int[] dx = {-1,1,0,0};
-	private static int[] dy = {0,0,-1,1};
-	private static int count;
-	private static int time;
-	private static int remain;
-	private static LinkedList<Pair> q;
-	private static boolean[][] visited;
+	// 위치 저장
+	static class Position {
+		int row;
+		int col;
 
-	public static void main(String[] args) throws Exception{
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st = new StringTokenizer(br.readLine());
-
-		N = Integer.parseInt(st.nextToken()); // 세로
-		M = Integer.parseInt(st.nextToken()); // 가로
-		map = new int[N][M];
-		count = 0;
-		for(int i=0;i<N;i++) {
-			st = new StringTokenizer(br.readLine());
-			for(int j=0;j<M;j++) {
-				map[i][j] = Integer.parseInt(st.nextToken());
-				if(map[i][j] == 1) {
-					count++;
-				}
-			}
+		public Position(int row, int col) {
+			super();
+			this.row = row;
+			this.col = col;
 		}
-		time = 0;
-		remain = 0;
-		visited = new boolean[N][M];
-		visit();
-		while(true) {
-			check();
-			remain = count;
-			remove();
+
+	}
+
+	//치즈 녹이기 시작
+	private static int startMelting() {
+
+		int time = 0;
+		int panSize = row * col;
+		//모든 칸이 공기가 될때까지 반복
+		while (air.size() < panSize) {
 			time++;
-			if(count == 0) {
-				break;
-			}
-			visit();
+			findAir();
+			boolean[][] visited = new boolean[row][col];
 
-		}
-		System.out.println(time);
-		System.out.println(remain);
-	}
+			for (Position now : air) {
+				for (int i = 0; i < 4; i++) {
+					int new_r = now.row + dr[i];
+					int new_c = now.col + dc[i];
 
-	static void remove() {
-		for(int i=0;i<N;i++) {
-			for(int j=0;j<M;j++) {
-				if(map[i][j] == 2) {
-					count--;
-					visited[i][j] = true;
-					map[i][j] = 0; 
-				}
-			}
-		}
-	}
-	static void check() {
-		for(int i=0;i<N;i++) {
-			for(int j=0;j<M;j++) {
-				if(map[i][j] >0) {
-					for(int dir=0;dir<4;dir++) {
-						int nx = i+dx[dir];
-						int ny = j+dy[dir];
-						if(visited[nx][ny]) {
-							map[i][j] = 2;
-							break;
+					if (new_r >= 0 && new_r < row && new_c >= 0 && new_c < col && !visited[new_r][new_c]) {
+						visited[new_r][new_c] = true;
+						if (pan[new_r][new_c] == -1) {
+							// 녹은 시간 저장
+							pan[new_r][new_c] = time;
 						}
 					}
 				}
 			}
 		}
+
+		return time - 1;
 	}
-	static void visit() {
-		q = new LinkedList<Pair>();
-		visited = new boolean[N][M];
-		q.add(new Pair(0,0));
+
+	// 공기 위치 찾는 함수
+	private static void findAir() {
+		Queue<Position> tmpQ = new LinkedList<>();
+		boolean visited[][] = new boolean[row][col];
+
+		air = new LinkedHashSet<>();
+		air.add(new Position(0, 0));
+		tmpQ.add(new Position(0, 0));
 		visited[0][0] = true;
-		while(!q.isEmpty()) {
-			Pair temp = q.poll();
-			for(int i=0;i<4;i++) {
-				int nx = temp.x + dx[i];
-				int ny = temp.y + dy[i];
-				if(nx<0 || nx > N-1 || ny <0 || ny >M-1) continue;
-				if(visited[nx][ny]) continue;
-				if(map[nx][ny] == 0) {
-					visited[nx][ny] = true;
-					q.add(new Pair(nx,ny));
+
+		while (!tmpQ.isEmpty()) {
+			Position now = tmpQ.poll();
+
+			for (int i = 0; i < 4; i++) {
+				int new_r = now.row + dr[i];
+				int new_c = now.col + dc[i];
+
+				// time값이 저장되면 공기로 처리
+				if (new_r >= 0 && new_r < row && new_c >= 0 && new_c < col && !visited[new_r][new_c]
+						&& pan[new_r][new_c] >= 0) {
+					visited[new_r][new_c] = true;
+					tmpQ.add(new Position(new_r, new_c));
+					air.add(new Position(new_r, new_c));
 				}
 			}
-
 		}
-
 	}
-	static class Pair{
-		int x, y;
 
-		public Pair(int x, int y) {
-			super();
-			this.x = x;
-			this.y = y;
+	// time에 남은 치즈 수
+	private static int meltingAtTime(int time) {
+		int count = 0;
+
+		for (int r = 0; r < row; r++) {
+			for (int c = 0; c < col; c++) {
+				if (pan[r][c] == time)
+					count++;
+			}
 		}
+
+		return count;
+	}
+
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+
+		row = Integer.parseInt(st.nextToken());
+		col = Integer.parseInt(st.nextToken());
+
+		pan = new int[row][col];
+
+		for (int r = 0; r < row; r++) {
+			st = new StringTokenizer(br.readLine());
+			for (int c = 0; c < col; c++) {
+				pan[r][c] = Integer.parseInt(st.nextToken());
+				// 녹은 시간 저장을 위해 치즈 위치를 -1로 저장
+				if (pan[r][c] == 1)
+					pan[r][c] = -1;
+			}
+		}
+
+		int time = startMelting();
+
+		System.out.println(time);
+		System.out.println(meltingAtTime(time));
 	}
 }
