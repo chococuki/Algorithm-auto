@@ -48,7 +48,7 @@ public class Main {
 				}
 			}
 
-			// 중간지점 뒤쪽 감소하는 수열 찾기
+			// 제일 뒤부터 중간지점 전까지 증가하는 수열
 			int endIndex = 0;
 			int[] endArr = new int[N];
 			endArr[0] = arr[N - 1];
@@ -72,12 +72,14 @@ public class Main {
 				}
 
 			}
-
+			
+			//각 수열의 끝값이 중간값보다 작을때
 			if (frontArr[frontIndex] < midNum)
 				frontIndex++;
 			if (endArr[endIndex] < midNum)
 				endIndex++;
-
+			
+			//누적 최대값
 			result = Math.max(result, (frontIndex + endIndex + 1));
 		}
 
