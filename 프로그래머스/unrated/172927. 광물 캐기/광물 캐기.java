@@ -12,6 +12,7 @@ class Solution {
     }
     
     public void mine(int[] picks, int nowpick, int pickCnt, String[] minerals, int cnt, int tired) {
+        //모든 광물 채굴 or 모든 곡괭이 사용
         if(cnt == minerals.length || (picks[0]==0 && picks[1]==0 && picks[2]==0 && pickCnt==5)) {
             result = Math.min(result, tired);
             return;
@@ -44,6 +45,7 @@ class Solution {
                 }
                 picks[2]++;
             }
+        //현재 곡괭이 사용 가능할 때
         } else {
             if(nowpick == 0) {
                 mine(picks, nowpick, pickCnt+1, minerals, cnt+1, tired+1);
