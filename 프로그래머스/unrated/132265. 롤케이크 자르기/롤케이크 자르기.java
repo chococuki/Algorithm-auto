@@ -8,32 +8,33 @@ class Solution {
             maxNum = Math.max(maxNum, i);
         }
         
-        int[] array = new int[maxNum + 1];
-        int countLeft = 0;
+        int[] array = new int[maxNum + 1]; // 토핑 종류, 갯수
+        int countR = 0;
         for(int i : topping) {
             if(array[i] == 0) {
-                countLeft++;
+                countR++;
             }
             array[i]++;
         }
 
         
-        // 순서대로 이동하며 토핑 갯수 비교
+        // 자르는 위치 이동하며 토핑 갯수 비교
         boolean[] hasTopping = new boolean[maxNum + 1];
-        int countRight = 0;
+        int countL = 0;
         int answer = 0;
         for(int i : topping) {
             if(!hasTopping[i]) {
                 hasTopping[i] = true;
-                countRight++;
+                countL++;
             }
-            array[i]--;
-            if(array[i] == 0) {
-                countLeft--;
+            if(--array[i] == 0) {
+                countR--;
             }
 
-            if(countRight == countLeft) {
+            if(countR == countL) {
                 answer++;
+            } else if(countR < countL) {    // 좌측 토핑이 더 많으면 종료 
+                break;
             }
         }
         
