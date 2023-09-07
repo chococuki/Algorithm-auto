@@ -17,25 +17,9 @@ class Solution {
         }
         
         int maxValue = Math.max(maxA, maxB);
-        Set<Integer> setA = new HashSet<>();
-        Set<Integer> setB = new HashSet<>();
-        
-        setA.add(minA);
-        for(int a : arrayA) {
-            if(a % minA != 0) {
-                setA.remove(minA);
-                break;
-            }
-        }
-        
-        setB.add(minB);
-        for(int b : arrayB) {
-            if(b % minB != 0) {
-                setB.remove(minB);
-                break;
-            }
-        }
-        
+        List<Integer> listA = new ArrayList<>();
+        List<Integer> listB = new ArrayList<>();
+            
         for(int i = 2; i <= minA; i++) {
             boolean is = true;
             for(int a : arrayA) {
@@ -45,7 +29,7 @@ class Solution {
                 }
             }
             if(is) {
-                setA.add(i);
+                listA.add(i);
             }
         }
         
@@ -58,12 +42,12 @@ class Solution {
                 }
             }
             if(is) {
-                setB.add(i);
+                listB.add(i);
             }
         }
         
         int answer = 0;
-        for(int i : setA) {
+        for(int i : listA) {
             boolean is = true;
             for(int b : arrayB) {
                 if(b % i == 0) {
@@ -76,7 +60,7 @@ class Solution {
             }
         }
         
-        for(int i : setB) {
+        for(int i : listB) {
             boolean is = true;
             for(int a : arrayA) {
                 if(a % i == 0) {
