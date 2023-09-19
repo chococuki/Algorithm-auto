@@ -5,18 +5,16 @@ class Solution {
         
         StringBuilder answer = new StringBuilder();
         boolean isFirst = true;
-        int size = s.length();
-        for(int i = 0; i < size; i++) {
-            String next = Character.toString(s.charAt(i));
-            
-            if(next.equals(" ")) {
-                answer.append(next);
+        
+        for(char c : s.toCharArray()) { // 한 글자씩 확인
+            if(c == ' ') {
+                answer.append(c);
                 isFirst = true;
-            } else if(isFirst) {
-                answer.append(next.toUpperCase());
+            } else if(isFirst) {    // 첫 글자면 대문자
+                answer.append(Character.toUpperCase(c));
                 isFirst = false;
-            } else {
-                answer.append(next.toLowerCase());
+            } else {                // 나머지 소문자
+                answer.append(Character.toLowerCase(c));
             }
         }
         
