@@ -203,17 +203,5 @@ public class Main {
 			this.c = c;
 			this.rot = rot;
 		}
-		
-		public String toString() {
-			if(rot == 0) {
-				return i+" "+r+" "+c+" 상";
-			} else if(rot == 1) {
-				return i+" "+r+" "+c+" 우";
-			} else if(rot == 2) {
-				return i+" "+r+" "+c+" 하";
-			} else {
-				return i+" "+r+" "+c+" 좌";
-			}
-		}
 	}
 }
