@@ -1,7 +1,7 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.LinkedList;
+import java.util.ArrayDeque;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.StringTokenizer;
@@ -47,7 +47,7 @@ public class Main {
 				if (map[i][j] != 0 && !visited[map[i][j]][i][j]) {
 					visited[map[i][j]][i][j] = true;
 					int island = map[i][j];
-					Queue<Node> que = new LinkedList<>();
+					Queue<Node> que = new ArrayDeque<>();
 
 					que.add(new Node(i, j));
 
@@ -113,7 +113,7 @@ public class Main {
 			for (int j = 0; j < N; j++) {
 				if (!visited[i][j] && tmpMap[i][j] == 1) {
 					visited[i][j] = true;
-					Queue<Node> que = new LinkedList<>();
+					Queue<Node> que = new ArrayDeque<>();
 					map[i][j] = index;
 					que.add(new Node(i, j));
 
