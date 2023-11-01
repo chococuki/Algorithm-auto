@@ -37,7 +37,7 @@ public class Main {
 	}
 
 	public static class Node implements Comparable<Node> {
-		boolean type;
+		boolean type;    // ture -> 시작, false -> 끝
 		long time;
 
 		public Node(boolean type, long time) {
@@ -45,6 +45,8 @@ public class Main {
 			this.time = time;
 		}
 
+		// 시간 순으로 정렬
+		// 시간이 같으면 끝내는 것이 우선순
 		public int compareTo(Node n) {
 			if (this.time == n.time) {
 				return Boolean.compare(this.type, n.type);
