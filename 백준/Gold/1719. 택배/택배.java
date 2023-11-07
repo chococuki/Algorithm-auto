@@ -2,7 +2,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,9 +34,8 @@ public class Main {
 		int[][] map = new int[n + 1][n + 1];
 		for (int i = 1; i <= n; i++) {
 			map[i][i] = -1;
-			int[] visited = new int[n + 1];
-			Arrays.fill(visited, Integer.MAX_VALUE);
-			visited[i] = 0;
+			boolean[] visited = new boolean[n + 1];
+			visited[i] = true;
 
 			PriorityQueue<Route> pq = new PriorityQueue<>();
 			for (Node node : routes.get(i)) {
@@ -47,8 +45,8 @@ public class Main {
 			while (!pq.isEmpty()) {
 				Route route = pq.poll();
 
-				if (visited[route.now] > route.weight) {
-					visited[route.now] = route.weight;
+				if (!visited[route.now]) {
+					visited[route.now] = true;
 					map[i][route.now] = route.first;
 
 					for (Node node : routes.get(route.now)) {
