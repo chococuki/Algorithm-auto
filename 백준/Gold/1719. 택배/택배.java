@@ -37,7 +37,7 @@ public class Main {
 
 			PriorityQueue<Route> pq = new PriorityQueue<>();
 			for (Node node : routes[i]) {
-				pq.add(new Route(node.to, i, node.to, node.weight));
+				pq.add(new Route(node.to, node.to, node.weight));
 			}
 
 			while (!pq.isEmpty()) {
@@ -46,11 +46,10 @@ public class Main {
 				if (!visited[route.now]) {
 					visited[route.now] = true;
 					map[i][route.now] = route.first;
-					map[route.now][i] = route.last;
 
 					for (Node node : routes[route.now]) {
 						if (!visited[node.to]) {
-							pq.add(new Route(route.first, route.now, node.to, route.weight + node.weight));
+							pq.add(new Route(route.first, node.to, route.weight + node.weight));
 						}
 					}
 				}
@@ -75,13 +74,11 @@ public class Main {
 
 	public static class Route implements Comparable<Route> {
 		int first;
-		int last;
 		int now;
 		int weight;
 
-		public Route(int first, int last, int now, int weight) {
+		public Route(int first, int now, int weight) {
 			this.first = first;
-			this.last = last;
 			this.now = now;
 			this.weight = weight;
 		}
