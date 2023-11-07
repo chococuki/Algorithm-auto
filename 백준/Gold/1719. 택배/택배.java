@@ -2,9 +2,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.StringTokenizer;
 
@@ -16,9 +14,9 @@ public class Main {
 		int n = Integer.parseInt(st.nextToken());
 		int m = Integer.parseInt(st.nextToken());
 
-		Map<Integer, List<Node>> routes = new HashMap<>();
+		List<Node>[] routes = new List[n + 1];
 		for (int i = 1; i <= n; i++) {
-			routes.put(i, new ArrayList<>());
+			routes[i] = new ArrayList<>();
 		}
 
 		for (int i = 0; i < m; i++) {
@@ -27,8 +25,8 @@ public class Main {
 			int b = Integer.parseInt(st.nextToken());
 			int w = Integer.parseInt(st.nextToken());
 
-			routes.get(a).add(new Node(b, w));
-			routes.get(b).add(new Node(a, w));
+			routes[a].add(new Node(b, w));
+			routes[b].add(new Node(a, w));
 		}
 
 		int[][] map = new int[n + 1][n + 1];
@@ -38,8 +36,8 @@ public class Main {
 			visited[i] = true;
 
 			PriorityQueue<Route> pq = new PriorityQueue<>();
-			for (Node node : routes.get(i)) {
-				pq.add(new Route(node.to, node.to, node.weight));
+			for (Node node : routes[i]) {
+				pq.add(new Route(node.to, i, node.to, node.weight));
 			}
 
 			while (!pq.isEmpty()) {
@@ -48,10 +46,11 @@ public class Main {
 				if (!visited[route.now]) {
 					visited[route.now] = true;
 					map[i][route.now] = route.first;
+					map[route.now][i] = route.last;
 
-					for (Node node : routes.get(route.now)) {
-						if(!visited[node.to]) {
-							pq.add(new Route(route.first, node.to, route.weight + node.weight));
+					for (Node node : routes[route.now]) {
+						if (!visited[node.to]) {
+							pq.add(new Route(route.first, route.now, node.to, route.weight + node.weight));
 						}
 					}
 				}
@@ -76,11 +75,13 @@ public class Main {
 
 	public static class Route implements Comparable<Route> {
 		int first;
+		int last;
 		int now;
 		int weight;
 
-		public Route(int first, int now, int weight) {
+		public Route(int first, int last, int now, int weight) {
 			this.first = first;
+			this.last = last;
 			this.now = now;
 			this.weight = weight;
 		}
