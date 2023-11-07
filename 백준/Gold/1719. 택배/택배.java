@@ -50,7 +50,9 @@ public class Main {
 					map[i][route.now] = route.first;
 
 					for (Node node : routes.get(route.now)) {
-						pq.add(new Route(route.first, node.to, route.weight + node.weight));
+						if(!visited[node.to]) {
+							pq.add(new Route(route.first, node.to, route.weight + node.weight));
+						}
 					}
 				}
 			}
