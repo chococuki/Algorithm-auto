@@ -16,10 +16,7 @@ public class Main {
 
 		int result = 0;
 		while (pq.size() > 1) {
-			int first = pq.poll();
-			int second = pq.poll();
-
-			int sum = first + second;
+			int sum = pq.poll() + pq.poll();
 			result += sum;
 			pq.add(sum);
 		}
