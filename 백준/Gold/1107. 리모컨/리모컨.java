@@ -11,27 +11,23 @@ public class Main {
 
 		int blockCnt = Integer.parseInt(br.readLine());
 
-		int count = 0;
-
 		boolean[] broken = new boolean[10];
+
+		// +- 1로만 이동 했을 경우
+		int count = Math.abs(target - 100);
 
 		// 고장난 버튼이 없을 경우
 		if (blockCnt == 0) {
-			count = Integer.toString(target).length();
-			count = Math.min(count, Math.abs(target - 100));
+			count = Math.min(count, Integer.toString(target).length());
 		} else {
 			StringTokenizer st = new StringTokenizer(br.readLine());
 
-			// 버튼이 전부 고장 났을떄
-			if (blockCnt == 10) {
-				count = Math.abs(target - 100);
-			} else {
+			// 버튼이 전부 고장 나지 않았을 떄
+			if (blockCnt != 10) {
+				// 고장난 버튼
 				for (int i = 0; i < blockCnt; i++) {
 					broken[Integer.parseInt(st.nextToken())] = true;
 				}
-
-				// +- 1로만 이동 했을 경우
-				count = Math.abs(target - 100);
 
 				// 채널 이동 후 +-로 이동
 				for (int i = 0; i < 1000000; i++) {
@@ -53,11 +49,7 @@ public class Main {
 		int count = 0;
 
 		if (number == 0) {
-			if (broken[0]) {
-				return 0;
-			} else {
-				return 1;
-			}
+			return broken[0] ? 0 : 1;
 		}
 
 		while (number > 0) {
