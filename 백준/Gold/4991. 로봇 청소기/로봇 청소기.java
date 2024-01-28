@@ -55,6 +55,7 @@ public class Main {
 		return result;
 	}
 
+	// 더러운 위치 모두 찾기
 	public static List<Position> findDirtyPosition(int row, int col, char[][] room) {
 		List<Position> dirtyList = new ArrayList<>();
 
@@ -69,6 +70,7 @@ public class Main {
 		return dirtyList;
 	}
 
+	// 더러운 위치간의 최단 거리 찾기
 	public static int[][] getAllDirtyDist(int row, int col, char[][] room, List<Position> dirtyList) {
 		int dirtyCount = dirtyList.size();
 
@@ -81,6 +83,7 @@ public class Main {
 			getDistList(row, col, distList, dirtyList.get(i), room);
 
 			if (distList.size() != dirtyCount - 1 || distList.isEmpty()) {
+				// 더러운 곳을 모두 청소할 수 없을 경우 null
 				return null;
 			} else {
 				getDist(dirtyDist[i], dirtyList, distList, dirtyCount);
@@ -90,6 +93,7 @@ public class Main {
 		return dirtyDist;
 	}
 
+	// start 로 부터 distList 간의 최단 거리
 	public static void getDistList(int row, int col, List<Position> distList, Position start, char[][] room) {
 		Queue<Position> que = new ArrayDeque<>();
 		que.add(start);
@@ -130,6 +134,7 @@ public class Main {
 		}
 	}
 
+	// 로봇에서 더러운곳 까지의 최단 거리
 	public static int[] findRobotDist(int row, int col, char[][] room, List<Position> dirtyList) {
 		int[] dist = new int[dirtyList.size()];
 
@@ -144,6 +149,7 @@ public class Main {
 		return dist;
 	}
 
+	// 로봇 위치
 	public static Position findRobot(int row, int col, char[][] room) {
 		for (int r = 0; r < row; r++) {
 			for (int c = 0; c < col; c++) {
@@ -156,21 +162,23 @@ public class Main {
 		return null;
 	}
 
+	// 더러운 곳을 모두 청소하는 최단 거리 찾기
 	public static int findMinDist(int[] robotDist, int[][] dirtyDist) {
 		int dirtyCount = robotDist.length;
 
-		boolean[] visited;
+		boolean[] visited = new boolean[dirtyCount];
 		int minDist = Integer.MAX_VALUE;
+		// 로봇이 처음으로 청소할곳
 		for (int i = 0; i < dirtyCount; i++) {
-			visited = new boolean[dirtyCount];
 			visited[i] = true;
-
 			minDist = findMinDistDFS(visited, dirtyDist, i, 1, robotDist[i], minDist);
+			visited[i] = false;
 		}
 
 		return minDist;
 	}
 
+	// 모든 경우를 확인 하며 최단거리 찾기
 	public static int findMinDistDFS(boolean[] visited, int[][] dirtyDist, int from, int count, int dist,
 		int minDist) {
 		if (count == visited.length) {
@@ -200,10 +208,6 @@ public class Main {
 			this.row = row;
 			this.col = col;
 			this.count = count;
-		}
-
-		public String toString() {
-			return "Position [" + row + ", " + col + ", " + count + "]";
 		}
 	}
 }
