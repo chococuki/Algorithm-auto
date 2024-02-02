@@ -43,12 +43,20 @@ public class Main {
 				for (int i = 0; i <= now.count; i++) {
 					int price = now.price * i;
 
+					if (price > totalPrice / 2) {
+						continue;
+					}
+
 					tmp.add(price);
 
 					canMake[price] = true;
 
 					for (int last : set) {
 						int newPrice = last + price;
+
+						if (newPrice > totalPrice / 2) {
+							continue;
+						}
 
 						if (!canMake[newPrice]) {
 							canMake[newPrice] = true;
